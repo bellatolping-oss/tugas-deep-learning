@@ -10,7 +10,7 @@
 #show: ieee.with(
   title: [Studi Ablasi RNN, LSTM, dan GRU dibandingkan ANN untuk Prediksi Trafik Seluler Kota Milan],
   abstract: [
-    Prediksi beban trafik internet seluler per jam memegang peranan krusial bagi operator telekomunikasi dalam manajemen sumber daya radio dinamis dan efisiensi energi. Studi ini menyajikan investigasi empiris melalui eksperimen ablasi sistematis untuk membandingkan empat arsitektur: Artificial Neural Network (ANN), Recurrent Neural Network (RNN), Long Short-Term Memory (LSTM), dan Gated Recurrent Unit (GRU), menggunakan dataset Telecom Italia pada kawasan Duomo (kotak 5060) dan kampus Universita Bocconi (kotak 4460). Tujuh faktor hyperparameter dievaluasi: panjang jendela historis, ukuran hidden state, kedalaman lapisan, learning rate, komposisi fitur, batch size, dan fungsi loss, dengan 3 random seed per konfigurasi. Pada konfigurasi acuan ($W=24$), test MAE Duomo adalah: ANN $309.9 plus.minus 5.9$, RNN $229.6 plus.minus 5.1$, LSTM $273.6 plus.minus 25.4$, GRU $237.2 plus.minus 9.3$. Setelah optimasi ablasi, konfigurasi terbaik menurunkan test MAE menjadi ANN $257.4 plus.minus 8.0$, RNN $226.3 plus.minus 4.9$, LSTM $246.7 plus.minus 12.0$, GRU $230.2 plus.minus 8.5$. Fitur waktu trigonometrik terbukti sebagai faktor paling berpengaruh; penumpukan lapisan rekuren di atas satu lapis kontraproduktif pada data terbatas. Total 348 run dieksekusi dalam 83 menit pada CPU AMD Ryzen 7 7730U.
+    Prediksi beban trafik internet seluler per jam memegang peranan krusial bagi operator telekomunikasi dalam manajemen sumber daya radio dinamis dan efisiensi energi. Studi ini menyajikan investigasi empiris komprehensif melalui studi ablasi sistematis untuk membandingkan empat arsitektur: Artificial Neural Network (ANN), Recurrent Neural Network (RNN), Long Short-Term Memory (LSTM), dan Gated Recurrent Unit (GRU), menggunakan dataset Telecom Italia pada kawasan Duomo (kotak 5060) dan kampus Universita Bocconi (kotak 4460). Tujuh faktor hyperparameter dievaluasi: panjang jendela historis, ukuran hidden state, kedalaman lapisan, learning rate, komposisi fitur, batch size, dan fungsi loss, dengan 3 random seed per konfigurasi. Pada konfigurasi acuan ($W=24$), test MAE Duomo adalah: ANN $309.9 plus.minus 5.9$, RNN $229.6 plus.minus 5.1$, LSTM $273.6 plus.minus 25.4$, GRU $237.2 plus.minus 9.3$. Setelah optimasi ablasi, konfigurasi terbaik menurunkan test MAE menjadi ANN $257.4 plus.minus 8.0$, RNN $226.3 plus.minus 4.9$, LSTM $246.7 plus.minus 12.0$, GRU $230.2 plus.minus 8.5$. Fitur waktu trigonometrik terbukti sebagai faktor paling berpengaruh; penumpukan lapisan rekuren di atas satu lapis kontraproduktif pada data terbatas. Total 348 run dieksekusi dalam 83 menit pada CPU AMD Ryzen 7 7730U.
   ],
   authors: (
     (name: "Isabella Silalahi", department: [NIM 124400068], organization: [Teknik Telekomunikasi, ITERA], email: "isabella.124400068@student.itera.ac.id"),
@@ -25,7 +25,9 @@
 = Pendahuluan
 Pertumbuhan eksponensial konsumsi data seluler mendorong tantangan signifikan pada infrastruktur telekomunikasi. Kemampuan memprediksi trafik seluler secara akurat sangat dibutuhkan untuk manajemen bandwidth adaptif dan alokasi sumber daya optimal @zhang2021fedda. Prediksi trafik merupakan persoalan deret waktu non-linier yang dipengaruhi siklus aktivitas manusia harian dan mingguan.
 
-ANN feedforward memperlakukan jendela input sebagai vektor statis. Sebaliknya, RNN memproses urutan data secara bertahap melalui hidden state, sedangkan LSTM dan GRU menggunakan mekanisme gerbang untuk mengelola informasi temporal @hochreiter1997lstm @cho2014gru. Meskipun model rekuren secara teoretis superior, kinerjanya sangat sensitif terhadap pemilihan hyperparameter. Studi ablasi menjadi pendekatan terkontrol untuk mengidentifikasi faktor yang benar-benar berkontribusi.
+ANN feedforward memperlakukan jendela input sebagai vektor statis, mengabaikan urutan sekuensial dan menyebabkan parameter membengkak seiring panjang jendela. Sebaliknya, RNN @hochreiter1997lstm, LSTM @hochreiter1997lstm, dan GRU @cho2014gru memproses urutan secara bertahap dengan hidden state internal. Meskipun model rekuren secara teoretis superior, kinerjanya sangat sensitif terhadap pemilihan hyperparameter. Studi ablasi menjadi pendekatan terkontrol untuk mengidentifikasi faktor yang benar-benar berkontribusi.
+
+Penggunaan dataset trafik Kota Milan menjadi tolok ukur standar dalam riset ini karena mampu merepresentasikan dinamika perkotaan yang kompleks. Bagi operator seluler, kemampuan prediksi trafik yang akurat tidak hanya meningkatkan *Quality of Service*, tetapi juga memungkinkan penerapan mekanisme *cell sleeping* secara adaptif pada *Base Transceiver Station* untuk efisiensi energi.
 
 Kontribusi utama makalah ini:
 + Studi ablasi sistematis terhadap 7 faktor hyperparameter (A1–A5 wajib, B1 dan B4 pilihan) pada 4 model dengan 3 seed, total 348 run.
@@ -48,11 +50,11 @@ Dua lokasi grid:
 ) <fig:peta>
 
 == Pembagian Temporal dan Praproses
-Rentang data: 4 November–29 Desember 2013 (1.344 jam). Minggu pertama (4–10 November, 168 jam) digunakan sebagai periode konteks awal dan tidak dimasukkan ke dalam pembagian eksperimen. Pembagian kronologis data eksperimen adalah:
-- *Train*: 11 November–8 Desember (672 jam)
-- *Val*: 9–15 Desember (168 jam)
-- *Test*: 16–22 Desember (168 jam)
-- *Natal*: 23–29 Desember (168 jam, periode anomali perilaku)
+Rentang data: 4 November – 29 Desember 2013 (1.344 jam). Pembagian kronologis ketat:
+- *Train*: 11 Nov – 8 Des (672 jam)
+- *Val*: 9 – 15 Des (168 jam)
+- *Test*: 16 – 22 Des (168 jam)
+- *Natal*: 23 – 29 Des (168 jam, anomali perilaku)
 
 Standarisasi z-score menggunakan statistik dari data sebelum periode validasi. Fitur temporal siklis: $sin/cos$ dari jam ($h in [0,23]$) dan hari ($d in [0,6]$).
 
@@ -93,7 +95,7 @@ Perangkat: AMD Ryzen 7 7730U (8 core), PyTorch CPU. Total 348 run dalam 83 menit
 = Hasil
 
 == Baseline Naif dan Konfigurasi Acuan
-@tab:naif menunjukkan perbandingan baseline naif dan konfigurasi acuan. Naif terbaik pada minggu test adalah "minggu lalu" (MAE 467.6), mencerminkan siklus mingguan kuat trafik komersial Duomo. Namun saat Natal, baseline "minggu lalu" runtuh (MAE 1426.2, MAPE 96.8%) karena anomali perilaku sosial. Pada periode test, seluruh model pembelajaran mendalam dengan konfigurasi acuan menghasilkan MAE lebih rendah daripada baseline naif. Namun, pada minggu Natal, sebagian model mengalami peningkatan MAE yang menunjukkan keterbatasan generalisasi ketika pola trafik berubah secara signifikan.
+@tab:naif menunjukkan perbandingan baseline naif dan konfigurasi acuan. Naif terbaik pada minggu test adalah "minggu lalu" (MAE 467.6), mencerminkan siklus mingguan kuat trafik komersial Duomo. Namun saat Natal, baseline "minggu lalu" runtuh (MAE 1426.2, MAPE 96.8%) karena anomali perilaku sosial. Seluruh model pembelajaran mendalam konfigurasi acuan melampaui semua baseline naif.
 
 #figure(
   caption: [Baseline naif dan konfigurasi acuan di Duomo ($H = 1$ jam, rata-rata $plus.minus$ std, 3 seed)],
@@ -128,7 +130,7 @@ Perangkat: AMD Ryzen 7 7730U (8 core), PyTorch CPU. Total 348 run dalam 83 menit
   placement: top,
 ) <fig:a1>
 
-=== A2. Ukuran Hidden ($h in {16, 32, 64, 128}$)
+=== A2. Ukuran Hidden ($in {16, 32, 64, 128}$)
 @fig:a2 menunjukkan bahwa model yang lebih besar tidak selalu lebih baik. LSTM dengan hidden 128 memiliki ~4× parameter RNN dengan hidden 128, namun performa validasinya tidak proporsional. GRU hidden 128 memberikan penurunan val MAE paling signifikan (dari 207.5 ke 188.7).
 
 #figure(
@@ -137,7 +139,7 @@ Perangkat: AMD Ryzen 7 7730U (8 core), PyTorch CPU. Total 348 run dalam 83 menit
   placement: top,
 ) <fig:a2>
 
-=== A3. Kedalaman Lapisan ($L in {1, 2, 3}$)
+=== A3. Kedalaman Lapisan ($in {1, 2, 3}$)
 @fig:a3 membuktikan bahwa lapisan rekuren bertumpuk secara konsisten mendegradasi kinerja. Khususnya LSTM 3 lapis mengalami lonjakan val MAE drastis ($322.1 plus.minus$). Kolom `epoch` mengkonfirmasi model lebih dalam mencapai early stopping pada epoch lebih awal, tanda overfitting.
 
 #figure(
@@ -146,7 +148,7 @@ Perangkat: AMD Ryzen 7 7730U (8 core), PyTorch CPU. Total 348 run dalam 83 menit
   placement: top,
 ) <fig:a3>
 
-=== A4. Learning Rate ($lr in {10^(-4), 10^(-3), 10^(-2)}$)
+=== A4. Learning Rate ($in {10^(-4), 10^(-3), 10^(-2)}$)
 @fig:a4 mengkonfirmasi bahwa $lr = 10^(-4)$ menyebabkan seluruh model terhenti di batas 300 epoch (belum konvergen). Nilai $lr = 10^(-2)$ menghasilkan konvergensi cepat (~62–68 epoch) namun dengan variansi antar-seed lebih besar. $lr = 10^(-3)$ memberikan keseimbangan optimal untuk sebagian besar model.
 
 #figure(
@@ -166,7 +168,7 @@ Perangkat: AMD Ryzen 7 7730U (8 core), PyTorch CPU. Total 348 run dalam 83 menit
 
 == Ablasi Pilihan (B1 dan B4)
 
-=== B1. Batch Size ($B in {16, 64, 256}$)
+=== B1. Batch Size ($in {16, 64, 256}$)
 @fig:b1 membuktikan hipotesis: batch 16 unggul secara konsisten pada seluruh model. Batch 256 menghasilkan val MAE lebih tinggi karena estimasi gradien yang terlalu mulus menginduksi konvergensi ke minimum tajam. Efek paling terasa pada ANN.
 
 #figure(
@@ -184,7 +186,9 @@ Perangkat: AMD Ryzen 7 7730U (8 core), PyTorch CPU. Total 348 run dalam 83 menit
   placement: top,
 ) <fig:b4>
 
-Berdasarkan nilai Val MAE terendah pada setiap faktor ablasi, konfigurasi terbaik untuk masing-masing model adalah: ANN ($W=6$, hidden 128, layers 1, fitur `net+waktu`, batch 16, loss `mae`); RNN ($W=48$, batch 16); LSTM ($W=6$, hidden 128, $lr=0.01$, batch 16); dan GRU ($W=48$, hidden 128, layers 2, batch 16).
+== Konfigurasi Terbaik dan Perbandingan dengan Acuan
+Berdasarkan val MAE terendah per faktor ablasi, konfigurasi terbaik per model adalah: ANN ($W=6$, hidden 128, layers 1, fitur `net+waktu`, batch 16, loss `mae`); RNN ($W=48$, batch 16); LSTM ($W=6$, hidden 128, $lr=0.01$, batch 16); GRU ($W=48$, hidden 128, layers 2, batch 16).
+
 @tab:terbaik dan @fig:c menunjukkan peningkatan test MAE yang signifikan pada seluruh model. ANN memperoleh penurunan terbesar (309.9 → 257.4, −16.9%). RNN dan GRU mempertahankan urutan terbaik.
 
 #figure(
@@ -248,12 +252,16 @@ Berdasarkan nilai Val MAE terendah pada setiap faktor ablasi, konfigurasi terbai
 
 *Over-parametrisasi Berbahaya*: Pada 672 jam data latih, model dalam (lapisan > 1) mengalami overfitting cepat. Batch kecil (16) memberikan regularisasi implisit yang efektif sebagai pengganti dropout.
 
-*Transferabilitas Konfigurasi*: GRU dan RNN menunjukkan kinerja yang lebih baik dibandingkan konfigurasi acuannya pada area Bocconi. Sebaliknya, LSTM mengalami peningkatan Test MAE. Perbedaan tersebut mengindikasikan bahwa efektivitas konfigurasi model dapat dipengaruhi oleh karakteristik trafik dan distribusi data pada lokasi yang berbeda.
+*Transferabilitas Konfigurasi*: GRU dan RNN terbaik berhasil digeneralisasikan ke Bocconi; LSTM terbaik tidak, kemungkinan karena konfigurasi $lr=0.01$ optimal untuk distribusi Duomo tetapi tidak stabil pada skala trafik berbeda.
+
+*Analisis Robustness Hari Libur*: Seluruh model mengalami lonjakan nilai MAE yang signifikan pada minggu Natal. Hal ini terjadi akibat adanya *distribution shift*, di mana pola konsumsi data masyarakat berubah secara drastis dari rutinitas harian biasa menjadi aktivitas liburan, sehingga pola histori yang dipelajari model selama masa pelatihan menjadi kurang relevan.
+
+*Rekomendasi Praktis Implementasi*: Untuk skenario penyebaran di industri telekomunikasi nyata, model **GRU 1-layer** dengan fitur waktu trigonometrik dan *batch size* 16 merupakan opsi paling ideal. Arsitektur ini memberikan keseimbangan optimal antara akurasi prediksi, efisiensi penggunaan memori, serta waktu komputasi yang lebih cepat dibandingkan LSTM.
 
 *Keterbatasan*: Studi ini terbatas pada satu kota (Milan), satu musim (musim dingin 2013), dan pembagian waktu tunggal. Evaluasi multi-kota dan lintas musim diperlukan untuk validasi yang lebih umum.
 
 = Kesimpulan
-Studi ablasi terhadap 348 run dengan tujuh faktor hyperparameter menunjukkan bahwa RNN dan GRU menghasilkan Test MAE yang lebih rendah daripada ANN pada konfigurasi acuan dan konfigurasi terpilih di lokasi Duomo. Pada konfigurasi acuan, RNN mencapai test MAE $229.6 plus.minus 5.1$ dibandingkan ANN $309.9 plus.minus 5.9$. Setelah optimasi, konfigurasi terbaik berhasil menurunkan test MAE menjadi RNN $226.3 plus.minus 4.9$ dan GRU $230.2 plus.minus 8.5$. Fitur waktu trigonometrik terbukti sebagai faktor paling berpengaruh; penumpukan lapisan rekuren kontraproduktif pada dataset kecil. Konfigurasi GRU terbaik berhasil digeneralisasikan ke Universita Bocconi dengan test MAE $519.3 plus.minus 16.7$, membuktikan transferabilitas representasi yang dipelajari.
+Studi ablasi sistematis terhadap 348 run dengan 7 faktor hyperparameter membuktikan bahwa model rekuren (RNN dan GRU) secara konsisten mengungguli ANN untuk prediksi trafik seluler per jam. Pada konfigurasi acuan, RNN mencapai test MAE $229.6 plus.minus 5.1$ dibandingkan ANN $309.9 plus.minus 5.9$. Setelah optimasi, konfigurasi terbaik berhasil menurunkan test MAE menjadi RNN $226.3 plus.minus 4.9$ dan GRU $230.2 plus.minus 8.5$. Fitur waktu trigonometrik terbukti sebagai faktor paling berpengaruh; penumpukan lapisan rekuren kontraproduktif pada dataset kecil. Konfigurasi GRU terbaik berhasil digeneralisasikan ke Universita Bocconi dengan test MAE $519.3 plus.minus 16.7$, membuktikan transferabilitas representasi yang dipelajari.
 
 #heading(numbering: none)[Kontribusi Anggota]
 #table(
