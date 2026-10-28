@@ -254,7 +254,7 @@ Berdasarkan val MAE terendah per faktor ablasi, konfigurasi terbaik per model ad
 
 *Transferabilitas Konfigurasi*: GRU dan RNN terbaik berhasil digeneralisasikan ke Bocconi; LSTM terbaik tidak, kemungkinan karena konfigurasi $lr=0.01$ optimal untuk distribusi Duomo tetapi tidak stabil pada skala trafik berbeda.
 
-*Analisis Robustness Hari Libur*: Seluruh model mengalami lonjakan nilai MAE yang signifikan pada minggu Natal. Hal ini terjadi akibat adanya *distribution shift*, di mana pola konsumsi data masyarakat berubah secara drastis dari rutinitas harian biasa menjadi aktivitas liburan, sehingga pola histori yang dipelajari model selama masa pelatihan menjadi kurang relevan.
+*Analisis Robustness Hari Libur*: Seluruh model mengalami lonjakan nilai MAE yang signifikan pada minggu Natal. Hal ini terjadi akibat adanya distribution shift, di mana pola konsumsi data masyarakat berubah secara drastis dari rutinitas harian biasa menjadi aktivitas liburan, sehingga pola histori yang dipelajari model selama masa pelatihan menjadi kurang relevan.
 
 *Rekomendasi Praktis Implementasi*: Untuk skenario penyebaran di industri telekomunikasi nyata, model **GRU 1-layer** dengan fitur waktu trigonometrik dan batch size 16 merupakan opsi paling ideal. Arsitektur ini memberikan keseimbangan optimal antara akurasi prediksi, efisiensi penggunaan memori, serta waktu komputasi yang lebih cepat dibandingkan LSTM.
 
