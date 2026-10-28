@@ -27,7 +27,7 @@ Pertumbuhan eksponensial konsumsi data seluler mendorong tantangan signifikan pa
 
 ANN feedforward memperlakukan jendela input sebagai vektor statis, mengabaikan urutan sekuensial dan menyebabkan parameter membengkak seiring panjang jendela. Sebaliknya, RNN @hochreiter1997lstm, LSTM @hochreiter1997lstm, dan GRU @cho2014gru memproses urutan secara bertahap dengan hidden state internal. Meskipun model rekuren secara teoretis superior, kinerjanya sangat sensitif terhadap pemilihan hyperparameter. Studi ablasi menjadi pendekatan terkontrol untuk mengidentifikasi faktor yang benar-benar berkontribusi.
 
-Penggunaan dataset trafik Kota Milan menjadi tolok ukur standar dalam riset ini karena mampu merepresentasikan dinamika perkotaan yang kompleks. Bagi operator seluler, kemampuan prediksi trafik yang akurat tidak hanya meningkatkan *Quality of Service*, tetapi juga memungkinkan penerapan mekanisme *cell sleeping* secara adaptif pada *Base Transceiver Station* untuk efisiensi energi.
+Penggunaan dataset trafik Kota Milan menjadi tolok ukur standar dalam riset ini karena mampu merepresentasikan dinamika perkotaan yang kompleks. Bagi operator seluler, kemampuan prediksi trafik yang akurat tidak hanya meningkatkan QoS, tetapi juga memungkinkan penerapan mekanisme cell sleeping secara adaptif pada Base Transceiver Station (BTS) untuk efisiensi energi.
 
 Kontribusi utama makalah ini:
 + Studi ablasi sistematis terhadap 7 faktor hyperparameter (A1–A5 wajib, B1 dan B4 pilihan) pada 4 model dengan 3 seed, total 348 run.
@@ -256,7 +256,7 @@ Berdasarkan val MAE terendah per faktor ablasi, konfigurasi terbaik per model ad
 
 *Analisis Robustness Hari Libur*: Seluruh model mengalami lonjakan nilai MAE yang signifikan pada minggu Natal. Hal ini terjadi akibat adanya *distribution shift*, di mana pola konsumsi data masyarakat berubah secara drastis dari rutinitas harian biasa menjadi aktivitas liburan, sehingga pola histori yang dipelajari model selama masa pelatihan menjadi kurang relevan.
 
-*Rekomendasi Praktis Implementasi*: Untuk skenario penyebaran di industri telekomunikasi nyata, model **GRU 1-layer** dengan fitur waktu trigonometrik dan *batch size* 16 merupakan opsi paling ideal. Arsitektur ini memberikan keseimbangan optimal antara akurasi prediksi, efisiensi penggunaan memori, serta waktu komputasi yang lebih cepat dibandingkan LSTM.
+*Rekomendasi Praktis Implementasi*: Untuk skenario penyebaran di industri telekomunikasi nyata, model **GRU 1-layer** dengan fitur waktu trigonometrik dan batch size 16 merupakan opsi paling ideal. Arsitektur ini memberikan keseimbangan optimal antara akurasi prediksi, efisiensi penggunaan memori, serta waktu komputasi yang lebih cepat dibandingkan LSTM.
 
 *Keterbatasan*: Studi ini terbatas pada satu kota (Milan), satu musim (musim dingin 2013), dan pembagian waktu tunggal. Evaluasi multi-kota dan lintas musim diperlukan untuk validasi yang lebih umum.
 
